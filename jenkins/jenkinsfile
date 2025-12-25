@@ -1,21 +1,26 @@
 pipeline {
-    agent any
-    /*Pour executer les tests unitaires du backend aavec le plugin Go*/
-      /*tools {
-        go 'Go-1.25.5'
-      }*/
+    agent {
+        docker {
+            image 'snakee/golang-junit:1.21'
+            // On s'assure que Go peut écrire ses outils et son cache
+            args '-u root' 
+        }
+    }
+    
+    environment {
+        // Force Go à utiliser le dossier de travail pour son cache
+        GOCACHE = "${WORKSPACE}/.cache"
+        // Optionnel : si tu as des problèmes de modules
+        GOPATH  = "${WORKSPACE}/go"
+    }
+
     stages {
-        stage('Unit Tests  -  Backend') {
-          /*Execute tests in a Docker container with Go and JUnit support*/
-          agent {
-            docker {
-              image 'snakee/golang-junit:1.21'
-              args '-v /go/pkg/mod:/go/pkg/mod'
-            }
-          }
+        stage('Unit Tests - Backend') {
             steps {
                 dir('bugtracker-backend') {
                     sh 'go version'
+                    // On crée le dossier de cache manuellement par sécurité
+                    sh 'mkdir -p .cache'
                     sh 'go test -v ./...'
                 }
             }
