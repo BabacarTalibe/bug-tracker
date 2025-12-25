@@ -2,6 +2,7 @@ pipeline {
     agent any
       tools {
         go 'Go-1.25.5'
+      }
     stages {
         stage('Unit Tests  -  Backend') {
             steps {
