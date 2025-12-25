@@ -1,17 +1,11 @@
 pipeline {
     agent any
-    
-    environment {
-        // On définit explicitement le chemin vers le binaire Go
-        PATH = "/usr/local/go/bin:${env.PATH}"
-    }
-
+      tools {
+        go 'Go-1.25.5'
     stages {
-        stage('Unit Tests - Backend') {
+        stage('Unit Tests  -  Backend') {
             steps {
                 dir('bugtracker-backend') {
-                    // Ajoute un debug pour être sûr de ce qu'on voit
-                    sh 'ls -l /usr/local/go/bin/go' 
                     sh 'go version'
                     sh 'go test -v ./...'
                 }
