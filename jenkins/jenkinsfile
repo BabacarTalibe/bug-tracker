@@ -1,10 +1,18 @@
 pipeline {
     agent any
-      tools {
+    /*Pour executer les tests unitaires du backend aavec le plugin Go*/
+      /*tools {
         go 'Go-1.25.5'
-      }
+      }*/
     stages {
         stage('Unit Tests  -  Backend') {
+          /*Execute tests in a Docker container with Go and JUnit support*/
+          agent {
+            docker {
+              image 'snakee/golang-junit:1.21'
+              args '-v /go/pkg/mod:/go/pkg/mod'
+            }
+          }
             steps {
                 dir('bugtracker-backend') {
                     sh 'go version'
