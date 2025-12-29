@@ -25,7 +25,12 @@ pipeline {
                     sh 'go version'
                     // On crée le dossier de cache manuellement par sécurité
                     sh 'mkdir -p .cache'
-                    sh 'go test -v ./...'
+                    sh 'go test -v ./... 2>&1 | go-junit-report > test-results.xml'
+                }
+            }
+            post {
+                always {
+                    junit 'bugtracker-backend/test-results.xml'
                 }
             }
         }
